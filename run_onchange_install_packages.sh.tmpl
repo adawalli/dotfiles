@@ -28,11 +28,29 @@ fi
 
 {{ else if eq .chezmoi.os "linux" }}
 if [[ -f /etc/debian_version ]]; then
+
+  # Add fury.io source for carapace if not present
+  if [[ ! -f /etc/apt/sources.list.d/fury.list ]]; then
+    echo 'deb [trusted=yes] https://apt.fury.io/rsteube/ /' | sudo tee /etc/apt/sources.list.d/fury.list
+  fi
+
   sudo apt-get update -y
 
   mapfile -t pkgs < <(grep -vE '^\s*(#|$)' "{{ joinPath .chezmoi.sourceDir "apt-packages.txt" }}" 2>/dev/null || true)
   if [[ ${#pkgs[@]} -eq 0 ]]; then
     pkgs=(git curl ca-certificates fish fzf ripgrep jq fd-find bat)
+  fi
+
+  missing=()
+  for p in "${pkgs[@]}"; do
+    if ! dpkg -s "$p" >/dev/null 2>&1; then
+      missing+=("$p")
+    fi
+  done
+
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    echo "Installing missing packages via apt: ${missing[*]}"
+    sudo apt-get install -y "${missing[@]}"
   fi
 
   case "{{ env "CHEZMOI_PROFILE" | default "default" }}" in
@@ -42,14 +60,6 @@ if [[ -f /etc/debian_version ]]; then
       # Install additional tools via package managers
       ;;
   esac
-
-  for p in "${pkgs[@]}"; do
-    if ! dpkg -s "$p" >/dev/null 2>&1; then
-      echo "Installing $p via apt..."
-    fi
-  done
-
-  # Install additional tools not in main package list
 
   # Install bat via apt if not available
   if ! command -v bat >/dev/null 2>&1 && ! command -v batcat >/dev/null 2>&1; then

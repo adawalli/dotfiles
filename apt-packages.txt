@@ -6,3 +6,4 @@ fzf
 ripgrep
 jq
 bat
+carapace-bin
