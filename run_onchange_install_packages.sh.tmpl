@@ -40,7 +40,7 @@ if [[ -f /etc/debian_version ]]; then
     minimal)
       ;;
     *)
-      pkgs+=(zellij)
+      # zellij will be installed via cargo if not available via apt
       ;;
   esac
 
@@ -89,33 +89,11 @@ if [[ -f /etc/debian_version ]]; then
     fi
   fi
 
-  # Try official installers as fallback for starship and atuin if cargo failed
-  if ! command -v starship >/dev/null 2>&1; then
-    echo "Trying starship official installer..."
-    curl -sS https://starship.rs/install.sh | sh -s -- --yes || true
-  fi
-
-  if ! command -v atuin >/dev/null 2>&1; then
-    echo "Trying atuin official installer..."
-    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh || true
-  fi
-
-  if ! command -v zellij >/dev/null 2>&1; then
-    {{ $target := "" }}
-    {{ if eq .chezmoi.arch "amd64" }}{{ $target = "x86_64-unknown-linux-gnu" }}{{ end }}
-    {{ if or (eq .chezmoi.arch "arm64") (eq .chezmoi.arch "aarch64") }}{{ $target = "aarch64-unknown-linux-gnu" }}{{ end }}
-    {{ if or (eq .chezmoi.arch "armv7") (eq .chezmoi.arch "armv7l") }}{{ $target = "armv7-unknown-linux-gnueabihf" }}{{ end }}
-    if [[ -n "{{ $target }}" ]]; then
-      tmpdir=$(mktemp -d)
-      url="https://github.com/zellij-org/zellij/releases/latest/download/zellij-{{ $target }}.tar.gz"
-      curl -fsSL "$url" -o "$tmpdir/zellij.tgz" || true
-      if [[ -s "$tmpdir/zellij.tgz" ]]; then
-        tar -xzf "$tmpdir/zellij.tgz" -C "$tmpdir" || true
-        binpath=$(find "$tmpdir" -maxdepth 2 -type f -name zellij | head -n1)
-        if [[ -n "$binpath" ]]; then
-          install -m 0755 "$binpath" "$HOME/.local/bin/zellij" || sudo install -m 0755 "$binpath" /usr/local/bin/zellij || true
-        fi
-      fi
+  # Install zellij via cargo if not available via apt
+  if command -v cargo >/dev/null 2>&1; then
+    if ! command -v zellij >/dev/null 2>&1; then
+      echo "Installing zellij via cargo..."
+      cargo install zellij || true
     fi
   fi
 fi
