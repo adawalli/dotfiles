@@ -76,9 +76,9 @@ if [[ -f /etc/debian_version ]]; then
     echo "Installing starship via apt..."
   fi
 
-  # Install atuin via apt if not available
+  # Install atuin if not available
   if ! command -v atuin >/dev/null 2>&1; then
-    echo "Installing atuin via apt..."
+    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
   fi
 
   # Install zellij if not available
