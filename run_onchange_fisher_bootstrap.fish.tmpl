@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 # Trigger rerun when plugin list changes
-# fish_plugins_sha256: {{ sha256sum (include "dot_config/private_fish/fish_plugins") }}
+# fish_plugins_sha256: {{ sha256sum (include "dot_config/fish/fish_plugins") }}
 
 if not functions -q fisher
     curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
