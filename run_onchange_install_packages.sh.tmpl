@@ -75,6 +75,29 @@ if [[ -f /etc/debian_version ]]; then
       echo "Installing just via cargo..."
       cargo install just || true
     fi
+
+    # Install starship via cargo if not available via apt
+    if ! command -v starship >/dev/null 2>&1; then
+      echo "Installing starship via cargo..."
+      cargo install starship --locked || true
+    fi
+
+    # Install atuin via cargo if not available via apt
+    if ! command -v atuin >/dev/null 2>&1; then
+      echo "Installing atuin via cargo..."
+      cargo install atuin || true
+    fi
+  fi
+
+  # Try official installers as fallback for starship and atuin if cargo failed
+  if ! command -v starship >/dev/null 2>&1; then
+    echo "Trying starship official installer..."
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes || true
+  fi
+
+  if ! command -v atuin >/dev/null 2>&1; then
+    echo "Trying atuin official installer..."
+    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh || true
   fi
 
   if ! command -v zellij >/dev/null 2>&1; then
