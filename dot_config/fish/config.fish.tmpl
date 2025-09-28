@@ -2,7 +2,6 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
     fish_add_path $HOME/.local/bin
     fish_add_path /usr/local/go/bin
-    fish_add_path $HOME/.cargo/bin
     {{- if eq .chezmoi.os "linux" }}
     fish_add_path $HOME/.atuin/bin
     {{- end }}
@@ -14,5 +13,4 @@ if status is-interactive
     set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
     carapace _carapace | source
     atuin init fish | source
-    source "$HOME/.cargo/env.fish"
 end

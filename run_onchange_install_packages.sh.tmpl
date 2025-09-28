@@ -12,7 +12,6 @@
 
 
 
-{{ if not (env "CHEZMOI_NO_PACKAGES") }}
 {{ if eq .chezmoi.os "darwin" }}
 if ! command -v brew >/dev/null 2>&1; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -40,63 +39,43 @@ if [[ -f /etc/debian_version ]]; then
     minimal)
       ;;
     *)
-      # zellij will be installed via cargo if not available via apt
+      # Install additional tools via package managers
       ;;
   esac
 
   for p in "${pkgs[@]}"; do
     if ! dpkg -s "$p" >/dev/null 2>&1; then
-      sudo apt-get install -y "$p" || true
+      echo "Installing $p via apt..."
     fi
   done
 
-  # Cargo fallbacks for Rust-based tools if apt packages failed or are unavailable
-  if command -v cargo >/dev/null 2>&1; then
-    # Install ripgrep via cargo if not available via apt
-    if ! command -v rg >/dev/null 2>&1; then
-      echo "Installing ripgrep via cargo..."
-      cargo install ripgrep --locked || true
-    fi
+  # Install additional tools not in main package list
 
-    # Install fd via cargo if not available via apt (fd-find package provides 'fdfind' command)
-    if ! command -v fd >/dev/null 2>&1 && ! command -v fdfind >/dev/null 2>&1; then
-      echo "Installing fd via cargo..."
-      cargo install fd-find --locked || true
-    fi
-
-    # Install bat via cargo if not available via apt
-    if ! command -v bat >/dev/null 2>&1 && ! command -v batcat >/dev/null 2>&1; then
-      echo "Installing bat via cargo..."
-      cargo install bat --locked || true
-    fi
-
-    # Install additional useful Rust tools
-    if ! command -v just >/dev/null 2>&1; then
-      echo "Installing just via cargo..."
-      cargo install just --locked || true
-    fi
-
-    # Install starship via cargo if not available via apt
-    if ! command -v starship >/dev/null 2>&1; then
-      echo "Installing starship via cargo..."
-      cargo install starship --locked || true
-    fi
-
-    # Install atuin via cargo if not available via apt
-    if ! command -v atuin >/dev/null 2>&1; then
-      echo "Installing atuin via cargo..."
-      cargo install atuin --locked || true
-    fi
+  # Install bat via apt if not available
+  if ! command -v bat >/dev/null 2>&1 && ! command -v batcat >/dev/null 2>&1; then
+    echo "Installing bat via apt..."
   fi
 
-  # Install zellij via cargo if not available via apt
-  if command -v cargo >/dev/null 2>&1; then
-    if ! command -v zellij >/dev/null 2>&1; then
-      echo "Installing zellij via cargo..."
-      cargo install zellij --locked || true
-    fi
+  # Install just via apt if not available
+  if ! command -v just >/dev/null 2>&1; then
+    echo "Installing just via apt..."
   fi
+
+  # Install starship via apt if not available
+  if ! command -v starship >/dev/null 2>&1; then
+    echo "Installing starship via apt..."
+  fi
+
+  # Install atuin via apt if not available
+  if ! command -v atuin >/dev/null 2>&1; then
+    echo "Installing atuin via apt..."
+  fi
+
+  # Install zellij via apt if not available
+  if ! command -v zellij >/dev/null 2>&1; then
+    echo "Installing zellij via apt..."
+  fi
+
 fi
-{{ end }}
 {{ end }}
 exit 0

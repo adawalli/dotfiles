@@ -5,5 +5,4 @@ fish
 fzf
 ripgrep
 jq
-fd-find
 bat

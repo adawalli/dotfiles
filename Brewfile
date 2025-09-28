@@ -9,6 +9,7 @@ brew "fd"
 brew "fzf"
 brew "bat"
 brew "jq"
+brew "just"
 
 # Optional GUI
 cask "ghostty"
