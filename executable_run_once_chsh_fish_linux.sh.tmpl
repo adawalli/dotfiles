@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Change login shell to fish on Linux only, unless disabled.
+
+if [[ -n "${CHEZMOI_NO_CHSH:-}" ]]; then
+  exit 0
+fi
+
+if [[ "$(uname -s)" != "Linux" ]]; then
+  exit 0
+fi
+
+if ! command -v fish >/dev/null 2>&1; then
+  exit 0
+fi
+
+current_shell=$(getent passwd "$USER" | cut -d: -f7 || echo "")
+fish_path=$(command -v fish)
+
+if [[ "$current_shell" != "$fish_path" ]]; then
+  if grep -qx "$fish_path" /etc/shells 2>/dev/null; then
+    chsh -s "$fish_path" "$USER" || true
+  else
+    echo "$fish_path" | sudo tee -a /etc/shells >/dev/null || true
+    chsh -s "$fish_path" "$USER" || true
+  fi
+fi
+
+exit 0

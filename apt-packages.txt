@@ -1,0 +1,12 @@
+git
+curl
+ca-certificates
+fish
+starship
+fzf
+ripgrep
+jq
+fd-find
+bat
+# Optional; may be unavailable in some Debian releases
+zellij
