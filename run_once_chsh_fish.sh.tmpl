@@ -1,16 +1,6 @@
-#!/usr/bin/env bash
-set -euo pipefail
+{{ template "sh_header" . }}
 
-# Change login shell to fish on Linux only, unless disabled.
-
-if [[ -n "${CHEZMOI_NO_CHSH:-}" ]]; then
-  exit 0
-fi
-
-if [[ "$(uname -s)" != "Linux" ]]; then
-  exit 0
-fi
-
+{{- if and (eq .chezmoi.os "linux") (not (env "CHEZMOI_NO_CHSH")) -}}
 if ! command -v fish >/dev/null 2>&1; then
   exit 0
 fi
@@ -26,5 +16,6 @@ if [[ "$current_shell" != "$fish_path" ]]; then
     chsh -s "$fish_path" "$USER" || true
   fi
 fi
+{{- end }}
 
 exit 0
