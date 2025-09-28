@@ -10,20 +10,12 @@ Overview
 Quick start
 
 ```bash
-./install.sh --yes
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply adawalli
 ```
-
-Options
-
-- `--yes`: non-interactive install (default behaviors, no prompts)
-- `--dry-run`: show actions only, do not change system
-- `--no-packages`: skip package manager steps
-- `--no-chsh`: do not change login shell on Linux
-- `--profile <default|minimal>`: host profile
 
 What this installs
 
-- chezmoi (bootstrap if missing) and applies this repo as source state
+- chezmoi and applies this repo as source state
 - fish + fisher plugins (from `fish_plugins`)
 - zellij with Catppuccin Mocha
 - Ghostty config via XDG path
