@@ -1,0 +1,18 @@
+{{ template "sh_header" . }}
+
+# Install Rust and Cargo using rustup
+if ! command -v cargo >/dev/null 2>&1; then
+  echo "Installing Rust and Cargo via rustup..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+  # Source the cargo environment
+  if [[ -f "$HOME/.cargo/env" ]]; then
+    source "$HOME/.cargo/env"
+  fi
+
+  echo "Rust and Cargo installed successfully"
+else
+  echo "Rust and Cargo already installed"
+fi
+
+exit 0

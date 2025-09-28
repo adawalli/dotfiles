@@ -50,6 +50,33 @@ if [[ -f /etc/debian_version ]]; then
     fi
   done
 
+  # Cargo fallbacks for Rust-based tools if apt packages failed or are unavailable
+  if command -v cargo >/dev/null 2>&1; then
+    # Install ripgrep via cargo if not available via apt
+    if ! command -v rg >/dev/null 2>&1; then
+      echo "Installing ripgrep via cargo..."
+      cargo install ripgrep || true
+    fi
+
+    # Install fd via cargo if not available via apt (fd-find package provides 'fdfind' command)
+    if ! command -v fd >/dev/null 2>&1 && ! command -v fdfind >/dev/null 2>&1; then
+      echo "Installing fd via cargo..."
+      cargo install fd-find || true
+    fi
+
+    # Install bat via cargo if not available via apt
+    if ! command -v bat >/dev/null 2>&1 && ! command -v batcat >/dev/null 2>&1; then
+      echo "Installing bat via cargo..."
+      cargo install bat || true
+    fi
+
+    # Install additional useful Rust tools
+    if ! command -v just >/dev/null 2>&1; then
+      echo "Installing just via cargo..."
+      cargo install just || true
+    fi
+  fi
+
   if ! command -v zellij >/dev/null 2>&1; then
     {{ $target := "" }}
     {{ if eq .chezmoi.arch "amd64" }}{{ $target = "x86_64-unknown-linux-gnu" }}{{ end }}
