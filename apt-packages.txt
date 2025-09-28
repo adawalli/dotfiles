@@ -2,7 +2,6 @@ git
 curl
 ca-certificates
 fish
-starship
 fzf
 ripgrep
 jq

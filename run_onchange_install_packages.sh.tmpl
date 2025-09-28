@@ -33,7 +33,7 @@ if [[ -f /etc/debian_version ]]; then
 
   mapfile -t pkgs < <(grep -vE '^\s*(#|$)' "{{ joinPath .chezmoi.sourceDir "apt-packages.txt" }}" 2>/dev/null || true)
   if [[ ${#pkgs[@]} -eq 0 ]]; then
-    pkgs=(git curl ca-certificates fish starship fzf ripgrep jq fd-find bat)
+    pkgs=(git curl ca-certificates fish fzf ripgrep jq fd-find bat)
   fi
 
   case "{{ env "CHEZMOI_PROFILE" | default "default" }}" in
