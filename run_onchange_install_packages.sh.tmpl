@@ -29,10 +29,6 @@ fi
 
 {{ else if eq .chezmoi.os "linux" }}
 if [[ -f /etc/debian_version ]]; then
-  # Ensure carapace apt source (fury.io) exists before updating
-  if ! grep -qs "apt.fury.io/rsteube" /etc/apt/sources.list.d/fury.list 2>/dev/null; then
-    echo "deb [trusted=yes] https://apt.fury.io/rsteube/ /" | sudo tee /etc/apt/sources.list.d/fury.list >/dev/null
-  fi
   sudo apt-get update -y
 
   mapfile -t pkgs < <(grep -vE '^\s*(#|$)' "{{ joinPath .chezmoi.sourceDir "apt-packages.txt" }}" 2>/dev/null || true)
@@ -47,9 +43,6 @@ if [[ -f /etc/debian_version ]]; then
       pkgs+=(zellij)
       ;;
   esac
-
-  # Always install carapace from the fury.io repo
-  pkgs+=(carapace-bin)
 
   for p in "${pkgs[@]}"; do
     if ! dpkg -s "$p" >/dev/null 2>&1; then
