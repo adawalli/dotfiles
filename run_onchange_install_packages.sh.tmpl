@@ -71,9 +71,26 @@ if [[ -f /etc/debian_version ]]; then
     echo "Installing atuin via apt..."
   fi
 
-  # Install zellij via apt if not available
+  # Install zellij if not available
   if ! command -v zellij >/dev/null 2>&1; then
-    echo "Installing zellij via apt..."
+    ZELLIJ_VERSION="0.43.1"
+
+    {{ if eq .chezmoi.arch "amd64" -}}
+    ARCH="x86_64"
+    {{ else if eq .chezmoi.arch "arm64" -}}
+    ARCH="aarch64"
+    {{ else -}}
+    echo "Unsupported architecture for zellij: {{ .chezmoi.arch }}"
+    exit 1
+    {{ end -}}
+
+    ZELLIJ_URL="https://github.com/zellij-org/zellij/releases/download/v${ZELLIJ_VERSION}/zellij-${ARCH}-unknown-linux-musl.tar.gz"
+
+    curl -L "$ZELLIJ_URL" -o /tmp/zellij.tar.gz
+    tar -xzf /tmp/zellij.tar.gz -C /tmp
+    mkdir -p "$HOME/.local/bin"
+    mv /tmp/zellij "$HOME/.local/bin/zellij"
+    rm /tmp/zellij.tar.gz
   fi
 
 fi
