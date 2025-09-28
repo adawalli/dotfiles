@@ -55,25 +55,25 @@ if [[ -f /etc/debian_version ]]; then
     # Install ripgrep via cargo if not available via apt
     if ! command -v rg >/dev/null 2>&1; then
       echo "Installing ripgrep via cargo..."
-      cargo install ripgrep || true
+      cargo install ripgrep --locked || true
     fi
 
     # Install fd via cargo if not available via apt (fd-find package provides 'fdfind' command)
     if ! command -v fd >/dev/null 2>&1 && ! command -v fdfind >/dev/null 2>&1; then
       echo "Installing fd via cargo..."
-      cargo install fd-find || true
+      cargo install fd-find --locked || true
     fi
 
     # Install bat via cargo if not available via apt
     if ! command -v bat >/dev/null 2>&1 && ! command -v batcat >/dev/null 2>&1; then
       echo "Installing bat via cargo..."
-      cargo install bat || true
+      cargo install bat --locked || true
     fi
 
     # Install additional useful Rust tools
     if ! command -v just >/dev/null 2>&1; then
       echo "Installing just via cargo..."
-      cargo install just || true
+      cargo install just --locked || true
     fi
 
     # Install starship via cargo if not available via apt
@@ -85,7 +85,7 @@ if [[ -f /etc/debian_version ]]; then
     # Install atuin via cargo if not available via apt
     if ! command -v atuin >/dev/null 2>&1; then
       echo "Installing atuin via cargo..."
-      cargo install atuin || true
+      cargo install atuin --locked || true
     fi
   fi
 
@@ -93,7 +93,7 @@ if [[ -f /etc/debian_version ]]; then
   if command -v cargo >/dev/null 2>&1; then
     if ! command -v zellij >/dev/null 2>&1; then
       echo "Installing zellij via cargo..."
-      cargo install zellij || true
+      cargo install zellij --locked || true
     fi
   fi
 fi
