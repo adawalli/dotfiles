@@ -61,23 +61,15 @@ if [[ -f /etc/debian_version ]]; then
       ;;
   esac
 
-  # Install bat via apt if not available
-  if ! command -v bat >/dev/null 2>&1 && ! command -v batcat >/dev/null 2>&1; then
-    echo "Installing bat via apt..."
-  fi
-
-  # Install just via apt if not available
-  if ! command -v just >/dev/null 2>&1; then
-    echo "Installing just via apt..."
-  fi
-
   # Install starship via apt if not available
   if ! command -v starship >/dev/null 2>&1; then
-    echo "Installing starship via apt..."
+    echo "Install sharship through Curl"
+    curl -sS https://starship.rs/install.sh | sh
   fi
 
   # Install atuin if not available
   if ! command -v atuin >/dev/null 2>&1; then
+    echo "Install atuin through Curl"
     curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
   fi
 
