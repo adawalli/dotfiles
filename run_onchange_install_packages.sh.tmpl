@@ -1,7 +1,19 @@
 {{ template "sh_header" . }}
 
-{{- if not (env "CHEZMOI_NO_PACKAGES") -}}
-{{- if eq .chezmoi.os "darwin" -}}
+# Dependency fingerprints to trigger rerun when lists change
+{{ $brewfile := "Brewfile" }}
+{{- if gt (len (glob $brewfile)) 0 }}
+# brewfile_sha256: {{ sha256sum (include $brewfile) }}
+{{- end -}}
+{{ $aptlist := "apt-packages.txt" }}
+{{- if gt (len (glob $aptlist)) 0 }}
+# aptlist_sha256: {{ sha256sum (include $aptlist) }}
+{{- end }}
+
+
+
+{{ if not (env "CHEZMOI_NO_PACKAGES") }}
+{{ if eq .chezmoi.os "darwin" }}
 if ! command -v brew >/dev/null 2>&1; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   if [[ -x /opt/homebrew/bin/brew ]]; then
@@ -15,7 +27,7 @@ if [[ -f "{{ joinPath .chezmoi.sourceDir "Brewfile" }}" ]]; then
   brew bundle --file "{{ joinPath .chezmoi.sourceDir "Brewfile" }}"
 fi
 
-{{- else if eq .chezmoi.os "linux" -}}
+{{ else if eq .chezmoi.os "linux" }}
 if [[ -f /etc/debian_version ]]; then
   sudo apt-get update -y
 
@@ -39,10 +51,10 @@ if [[ -f /etc/debian_version ]]; then
   done
 
   if ! command -v zellij >/dev/null 2>&1; then
-    {{- $target := "" -}}
-    {{- if eq .chezmoi.arch "amd64" }}{{ $target = "x86_64-unknown-linux-gnu" }}{{ end -}}
-    {{- if or (eq .chezmoi.arch "arm64") (eq .chezmoi.arch "aarch64") }}{{ $target = "aarch64-unknown-linux-gnu" }}{{ end -}}
-    {{- if or (eq .chezmoi.arch "armv7") (eq .chezmoi.arch "armv7l") }}{{ $target = "armv7-unknown-linux-gnueabihf" }}{{ end -}}
+    {{ $target := "" }}
+    {{ if eq .chezmoi.arch "amd64" }}{{ $target = "x86_64-unknown-linux-gnu" }}{{ end }}
+    {{ if or (eq .chezmoi.arch "arm64") (eq .chezmoi.arch "aarch64") }}{{ $target = "aarch64-unknown-linux-gnu" }}{{ end }}
+    {{ if or (eq .chezmoi.arch "armv7") (eq .chezmoi.arch "armv7l") }}{{ $target = "armv7-unknown-linux-gnueabihf" }}{{ end }}
     if [[ -n "{{ $target }}" ]]; then
       tmpdir=$(mktemp -d)
       url="https://github.com/zellij-org/zellij/releases/latest/download/zellij-{{ $target }}.tar.gz"
@@ -57,7 +69,7 @@ if [[ -f /etc/debian_version ]]; then
     fi
   fi
 fi
-{{- end -}}
-{{- end -}}
+{{ end }}
+{{ end }}
 
 exit 0

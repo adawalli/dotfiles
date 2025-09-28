@@ -1,4 +1,3 @@
-tap "homebrew/cask-fonts"
 
 brew "fish"
 brew "zellij"
@@ -11,6 +10,5 @@ brew "fzf"
 brew "bat"
 brew "jq"
 
-cask "font-jetbrains-mono-nerd-font"
 # Optional GUI
 cask "ghostty"
