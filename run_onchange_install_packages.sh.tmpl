@@ -73,6 +73,12 @@ if [[ -f /etc/debian_version ]]; then
     curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
   fi
 
+  # Install zoxide if not available
+  if ! command -v zoxide >/dev/null 2>&1; then
+    echo "Install zoxide through Curl"
+    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+  fi
+
   # Install zellij if not available
   if ! command -v zellij >/dev/null 2>&1; then
     ZELLIJ_VERSION="0.43.1"
