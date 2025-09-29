@@ -41,6 +41,7 @@ font-family = JetBrainsMono Nerd Font Mono
 # # which is explained in the docs for that config option.
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
+mouse-scroll-multiplier = 0.75
 command = /opt/homebrew/bin/fish --login --interactive
 theme = Catppuccin Mocha
 keybind = super+arrow_left=esc:b
