@@ -1,0 +1,15 @@
+{{ template "sh_header" . }}
+
+# On Debian/Ubuntu, fd-find installs as 'fdfind' but we want to use 'fd'
+{{ if eq .chezmoi.os "linux" }}
+if [[ -f /etc/debian_version ]]; then
+  # Only create symlink if fdfind exists and fd doesn't
+  if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+    mkdir -p "$HOME/.local/bin"
+    ln -sf "$(which fdfind)" "$HOME/.local/bin/fd"
+    echo "Created symlink: $HOME/.local/bin/fd -> $(which fdfind)"
+  fi
+fi
+{{ end }}
+
+exit 0
