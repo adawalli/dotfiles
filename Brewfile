@@ -10,6 +10,7 @@ brew "fzf"
 brew "bat"
 brew "jq"
 brew "just"
+brew "nvim"
 
 # Optional GUI
 cask "ghostty"
