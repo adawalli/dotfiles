@@ -1,0 +1,3 @@
+{{- range $key, $value := .sensitive }}
+set -gx {{ $key | upper }} "{{ $value }}"
+{{- end }}

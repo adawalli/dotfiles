@@ -1,5 +1,6 @@
 jorgebucaran/fisher
+jhillyerd/plugin-git
 jorgebucaran/nvm.fish
 blackjid/plugin-kubectl
 catppuccin/fish
-jhillyerd/plugin-git
+berk-karaal/loadenv.fish
