@@ -23,6 +23,6 @@ if status is-interactive
     if command -v atuin >/dev/null 2>&1
         atuin init fish | source
     end
-    set -gx VISUAL cursor
+    set -gx VISUAL "cursor --wait"
     if command -q pyenv; source (pyenv init - | psub); end
 end
