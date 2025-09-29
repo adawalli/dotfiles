@@ -7,4 +7,4 @@ ripgrep
 jq
 bat
 carapace-bin
-nvim
+neovim
