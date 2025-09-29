@@ -2,6 +2,6 @@
 [user]
 # Please adapt and uncomment the following lines:
 	name = Adam Wallis
-	email = {{ .email | quote }}
+	email = {{ .email | default "adam@byte.fit" | quote }}
 [core]
 	editor = nvim
