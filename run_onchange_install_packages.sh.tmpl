@@ -101,6 +101,29 @@ if [[ -f /etc/debian_version ]]; then
     rm /tmp/zellij.tar.gz
   fi
 
+  # Install neovim if not available
+  if ! command -v nvim >/dev/null 2>&1; then
+    echo "Installing neovim from GitHub releases"
+
+    {{ if eq .chezmoi.arch "amd64" -}}
+    NVIM_ARCH="x86_64"
+    {{ else if eq .chezmoi.arch "arm64" -}}
+    NVIM_ARCH="arm64"
+    {{ else -}}
+    echo "Unsupported architecture for neovim: {{ .chezmoi.arch }}"
+    exit 1
+    {{ end -}}
+
+    NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${NVIM_ARCH}.tar.gz"
+
+    curl -L "$NVIM_URL" -o /tmp/nvim.tar.gz
+    tar -xzf /tmp/nvim.tar.gz -C /tmp
+    mkdir -p "$HOME/.local"
+    # Extract and merge into .local directory structure
+    cp -r /tmp/nvim-linux-${NVIM_ARCH}/* "$HOME/.local/"
+    rm -rf /tmp/nvim.tar.gz /tmp/nvim-linux-${NVIM_ARCH}
+  fi
+
 fi
 {{ end }}
 exit 0

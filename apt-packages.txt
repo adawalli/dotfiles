@@ -7,5 +7,4 @@ ripgrep
 jq
 bat
 carapace-bin
-neovim
 fd-find
