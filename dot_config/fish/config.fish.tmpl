@@ -20,6 +20,7 @@ if status is-interactive
     source (starship init fish --print-full-init | psub)
     set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
     if command -q carapace; carapace _carapace | source; end
+    set -Ux CARAPACE_EXCLUDES kubectl # I was having issues with kubectl through carapace
     if command -v atuin >/dev/null 2>&1
         atuin init fish | source
     end
