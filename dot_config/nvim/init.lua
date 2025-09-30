@@ -14,7 +14,13 @@ if not vim.loop.fs_stat(mini_path) then
 end
 
 -- Set up 'mini.deps' (customize to your liking)
-require('mini.deps').setup({ path = { package = path_package } })
+-- Use stdpath('data') for log to support older Neovim versions
+require('mini.deps').setup({
+  path = {
+    package = path_package,
+    log = vim.fn.stdpath('data') .. '/mini-deps.log',
+  }
+})
 
 -- Helper for adding plugins
 local add = require('mini.deps').add
