@@ -44,7 +44,7 @@ local add = require('mini.deps').add
 add({ source = "catppuccin/nvim", name = "catppuccin" })
 
 -- Set the colorscheme
-vim.cmd.colorscheme('catppuccin-mocha')
+vim.cmd('colorscheme catppuccin-mocha')
 
 -- Basic Neovim settings
 vim.opt.number = true
