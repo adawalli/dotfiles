@@ -1,0 +1,33 @@
+{{ template "sh_header" . }}
+
+# Content fingerprint - modify this comment to trigger rerun manually
+# themes_version: 1.0.0
+
+# Setup bat/batcat Catppuccin theme
+{{ if eq .chezmoi.os "darwin" }}
+BAT_CMD="bat"
+{{ else }}
+BAT_CMD="batcat"
+{{ end }}
+
+if command -v $BAT_CMD >/dev/null 2>&1; then
+  echo "Setting up Catppuccin theme for bat..."
+
+  # Create themes directory
+  mkdir -p "$(${BAT_CMD} --config-dir)/themes"
+
+  # Download Catppuccin Mocha theme
+  curl -fsSL -o "$(${BAT_CMD} --config-dir)/themes/Catppuccin Mocha.tmTheme" \
+    "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme"
+
+  # Rebuild bat cache
+  ${BAT_CMD} cache --build
+
+  echo "✓ Bat theme installed"
+else
+  echo "bat/batcat not found, skipping theme setup"
+fi
+
+# Future: Add other tool themes here (fzf, starship, zellij, etc.)
+
+exit 0
