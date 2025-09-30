@@ -1,3 +1,7 @@
 function vi --wraps nvim --description 'Use nvim instead of vi'
-    command nvim $argv
+    if command -q nvim
+        command nvim $argv
+    else
+        command vi $argv
+    end
 end
