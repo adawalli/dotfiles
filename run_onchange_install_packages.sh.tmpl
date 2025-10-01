@@ -29,13 +29,27 @@ fi
 {{ else if eq .chezmoi.os "linux" }}
 if [[ -f /etc/debian_version ]]; then
 
+  # Add all apt sources first
+
   # Add fury.io source for carapace if not present
   if [[ ! -f /etc/apt/sources.list.d/fury.list ]]; then
+    echo "Adding fury.io apt repository for carapace"
     echo 'deb [trusted=yes] https://apt.fury.io/rsteube/ /' | sudo tee /etc/apt/sources.list.d/fury.list
   fi
 
+  # Add gierens.de source for eza if not present
+  if [[ ! -f /etc/apt/sources.list.d/gierens.list ]]; then
+    echo "Adding gierens.de apt repository for eza"
+    sudo mkdir -p /etc/apt/keyrings
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+    sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+  fi
+
+  # Update apt cache after adding all sources
   sudo apt-get update -y
 
+  # Install all apt packages
   mapfile -t pkgs < <(grep -vE '^\s*(#|$)' "{{ joinPath .chezmoi.sourceDir "apt-packages.txt" }}" 2>/dev/null || true)
   if [[ ${#pkgs[@]} -eq 0 ]]; then
     pkgs=(git curl ca-certificates fish fzf ripgrep jq fd-find bat)

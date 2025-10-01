@@ -16,6 +16,7 @@ brew "zoxide"
 brew "vivid"
 brew "tree"
 brew "k9s"
+brew "eza"
 
 # Optional GUI
 cask "ghostty"

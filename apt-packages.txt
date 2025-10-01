@@ -8,3 +8,4 @@ bat
 carapace-bin
 fd-find
 tree
+eza
