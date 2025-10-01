@@ -8,3 +8,4 @@ jq
 bat
 carapace-bin
 fd-find
+tree
