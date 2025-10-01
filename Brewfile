@@ -13,6 +13,7 @@ brew "just"
 brew "nvim"
 brew "zoxide"
 brew "vivid"
+brew "tree"
 
 # Optional GUI
 cask "ghostty"
