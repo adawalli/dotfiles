@@ -124,6 +124,27 @@ if [[ -f /etc/debian_version ]]; then
     rm -rf /tmp/nvim.tar.gz /tmp/nvim-linux-${NVIM_ARCH}
   fi
 
+  # Install vivid if not available
+  if ! command -v vivid >/dev/null 2>&1; then
+    echo "Installing vivid from GitHub releases"
+    VIVID_VERSION="0.10.1"
+
+    {{ if eq .chezmoi.arch "amd64" -}}
+    VIVID_ARCH="amd64"
+    {{ else if eq .chezmoi.arch "arm64" -}}
+    VIVID_ARCH="arm64"
+    {{ else -}}
+    echo "Unsupported architecture for vivid: {{ .chezmoi.arch }}"
+    exit 1
+    {{ end -}}
+
+    VIVID_URL="https://github.com/sharkdp/vivid/releases/download/v${VIVID_VERSION}/vivid_${VIVID_VERSION}_${VIVID_ARCH}.deb"
+
+    curl -L "$VIVID_URL" -o /tmp/vivid.deb
+    sudo dpkg -i /tmp/vivid.deb
+    rm /tmp/vivid.deb
+  fi
+
 fi
 {{ end }}
 exit 0

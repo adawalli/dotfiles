@@ -12,6 +12,7 @@ brew "jq"
 brew "just"
 brew "nvim"
 brew "zoxide"
+brew "vivid"
 
 # Optional GUI
 cask "ghostty"
