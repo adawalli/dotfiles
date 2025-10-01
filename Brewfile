@@ -1,4 +1,5 @@
 
+brew "coreutils"
 brew "fish"
 brew "zellij"
 brew "starship"

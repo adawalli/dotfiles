@@ -1,0 +1,15 @@
+{{- if eq .chezmoi.os "darwin" }}
+# Use GNU ls with color support on macOS
+function ls --wraps='gls --color=auto' --description 'GNU ls with colors'
+    if command -q gls
+        gls --color=auto $argv
+    else
+        command ls $argv
+    end
+end
+{{- else }}
+# Use native ls with color support on Linux
+function ls --wraps='ls --color=auto' --description 'ls with colors'
+    command ls --color=auto $argv
+end
+{{- end }}
