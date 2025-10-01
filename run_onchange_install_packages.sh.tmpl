@@ -145,6 +145,29 @@ if [[ -f /etc/debian_version ]]; then
     rm /tmp/vivid.deb
   fi
 
+  # Install fzf if not available
+  if ! command -v fzf >/dev/null 2>&1; then
+    echo "Installing fzf from GitHub releases"
+    FZF_VERSION="0.65.2"
+
+    {{ if eq .chezmoi.arch "amd64" -}}
+    FZF_ARCH="amd64"
+    {{ else if eq .chezmoi.arch "arm64" -}}
+    FZF_ARCH="arm64"
+    {{ else -}}
+    echo "Unsupported architecture for fzf: {{ .chezmoi.arch }}"
+    exit 1
+    {{ end -}}
+
+    FZF_URL="https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${FZF_ARCH}.tar.gz"
+
+    curl -L "$FZF_URL" -o /tmp/fzf.tar.gz
+    tar -xzf /tmp/fzf.tar.gz -C /tmp
+    mkdir -p "$HOME/.local/bin"
+    mv /tmp/fzf "$HOME/.local/bin/fzf"
+    rm /tmp/fzf.tar.gz
+  fi
+
 fi
 {{ end }}
 exit 0
