@@ -15,6 +15,7 @@ brew "nvim"
 brew "zoxide"
 brew "vivid"
 brew "tree"
+brew "k9s"
 
 # Optional GUI
 cask "ghostty"
