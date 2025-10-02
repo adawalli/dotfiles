@@ -28,22 +28,4 @@ else
   echo "bat/batcat not found, skipping theme setup"
 fi
 
-# Setup k9s Catppuccin theme
-if command -v k9s >/dev/null 2>&1; then
-  echo "Setting up Catppuccin themes for k9s..."
-
-  # Create skins directory
-  OUT="${XDG_CONFIG_HOME:-$HOME/.config}/k9s/skins"
-  mkdir -p "$OUT"
-
-  # Download and extract Catppuccin themes
-  curl -fsSL https://github.com/catppuccin/k9s/archive/main.tar.gz | \
-    tar xz -C "$OUT" --strip-components=2 k9s-main/dist
-
-  echo "✓ k9s themes installed"
-else
-  echo "k9s not found, skipping theme setup"
-fi
-# Future: Add other tool themes here (fzf, starship, zellij, etc.)
-
 exit 0
