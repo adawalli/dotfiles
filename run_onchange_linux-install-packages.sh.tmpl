@@ -8,7 +8,7 @@ if [[ -f /etc/debian_version ]]; then
   {{ range .packages.linux.apt_repos -}}
   if [[ ! -f {{ .check }} ]]; then
     echo "Adding {{ .name }} apt repository..."
-    {{ if .setup_script -}}
+    {{ if hasKey . "setup_script" -}}
     {{ .setup_script | trim | indent 4 }}
     {{ else -}}
     echo {{ .repo | squote }} | sudo tee {{ .file }}
