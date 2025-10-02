@@ -1,9 +1,6 @@
 {{ if eq .chezmoi.os "darwin" -}}
 {{ template "sh_header" . }}
 
-# Dependency fingerprint to trigger rerun when package list changes
-# packages_sha256: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
-
 # Install Homebrew if not present
 if ! command -v brew >/dev/null 2>&1; then
   echo "Installing Homebrew..."

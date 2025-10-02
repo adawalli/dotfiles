@@ -1,9 +1,6 @@
 {{ if eq .chezmoi.os "linux" -}}
 {{ template "sh_header" . }}
 
-# Dependency fingerprint to trigger rerun when package list changes
-# packages_sha256: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
-
 if [[ -f /etc/debian_version ]]; then
   echo "Setting up Debian/Ubuntu package management..."
 
