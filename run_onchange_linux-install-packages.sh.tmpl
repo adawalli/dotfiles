@@ -1,0 +1,79 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{ template "sh_header" . }}
+
+# Dependency fingerprint to trigger rerun when package list changes
+# packages_sha256: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
+
+if [[ -f /etc/debian_version ]]; then
+  echo "Setting up Debian/Ubuntu package management..."
+
+  # Add apt repositories
+  {{ range .packages.linux.apt_repos -}}
+  if [[ ! -f {{ .check }} ]]; then
+    echo "Adding {{ .name }} apt repository..."
+    {{ if .setup_script -}}
+    {{ .setup_script | trim | indent 4 }}
+    {{ else -}}
+    echo {{ .repo | squote }} | sudo tee {{ .file }}
+    {{ end -}}
+  fi
+  {{ end }}
+
+  # Update apt cache
+  sudo apt-get update -y
+
+  # Install apt packages
+  echo "Installing apt packages..."
+  missing=()
+  {{ range .packages.linux.apt -}}
+  if ! dpkg -s {{ . | quote }} >/dev/null 2>&1; then
+    missing+=({{ . | quote }})
+  fi
+  {{ end -}}
+
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    echo "Installing: ${missing[*]}"
+    sudo apt-get install -y "${missing[@]}"
+  else
+    echo "All apt packages already installed"
+  fi
+
+  # Handle CHEZMOI_PROFILE for minimal installs
+  case "{{ env "CHEZMOI_PROFILE" | default "default" }}" in
+    minimal)
+      echo "Minimal profile: skipping additional binary installations"
+      exit 0
+      ;;
+  esac
+
+  # Install additional binaries
+  {{ range .packages.linux.binaries -}}
+  if ! command -v {{ .check }} >/dev/null 2>&1; then
+    echo "Installing {{ .name }}..."
+    {{ if .url_template -}}
+    {{ if .version -}}
+    VERSION={{ .version | quote }}
+    {{ end -}}
+    {{ if .arch_map -}}
+    {{ if eq $.chezmoi.arch "amd64" -}}
+    ARCH={{ index .arch_map "amd64" | quote }}
+    {{ else if eq $.chezmoi.arch "arm64" -}}
+    ARCH={{ index .arch_map "arm64" | quote }}
+    {{ else -}}
+    echo "Unsupported architecture for {{ .name }}: {{ $.chezmoi.arch }}"
+    exit 1
+    {{ end -}}
+    {{ end -}}
+    URL="{{ .url_template }}"
+    URL="${URL//\$\{VERSION\}/${VERSION}}"
+    URL="${URL//\$\{ARCH\}/${ARCH}}"
+    {{ end -}}
+    {{ .install_script | trim | indent 4 }}
+  else
+    echo "{{ .name }} already installed"
+  fi
+  {{ end }}
+
+  echo "✓ Linux packages installed successfully"
+fi
+{{ end -}}

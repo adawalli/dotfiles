@@ -1,0 +1,117 @@
+packages:
+  darwin:
+    brews:
+      - coreutils
+      - fish
+      - zellij
+      - starship
+      - atuin
+      - carapace
+      - ripgrep
+      - fd
+      - fzf
+      - bat
+      - jq
+      - just
+      - nvim
+      - zoxide
+      - vivid
+      - tree
+      - k9s
+      - eza
+    casks:
+      - ghostty
+
+  linux:
+    apt:
+      - git
+      - curl
+      - ca-certificates
+      - fish
+      - ripgrep
+      - jq
+      - bat
+      - carapace-bin
+      - fd-find
+      - tree
+      - eza
+
+    apt_repos:
+      - name: carapace
+        check: /etc/apt/sources.list.d/fury.list
+        repo: 'deb [trusted=yes] https://apt.fury.io/rsteube/ /'
+        file: /etc/apt/sources.list.d/fury.list
+
+      - name: eza
+        check: /etc/apt/sources.list.d/gierens.list
+        setup_script: |
+          sudo mkdir -p /etc/apt/keyrings
+          wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+          echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+          sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+
+    binaries:
+      - name: starship
+        check: starship
+        install_script: curl -sS https://starship.rs/install.sh | sh -s -- -y
+
+      - name: atuin
+        check: atuin
+        install_script: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh -s -- --no-modify-path
+
+      - name: zoxide
+        check: zoxide
+        install_script: curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
+      - name: zellij
+        check: zellij
+        version: "0.43.1"
+        arch_map:
+          amd64: x86_64
+          arm64: aarch64
+        url_template: "https://github.com/zellij-org/zellij/releases/download/v${VERSION}/zellij-${ARCH}-unknown-linux-musl.tar.gz"
+        install_script: |
+          curl -L "${URL}" -o /tmp/zellij.tar.gz
+          tar -xzf /tmp/zellij.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/zellij "$HOME/.local/bin/zellij"
+          rm /tmp/zellij.tar.gz
+
+      - name: neovim
+        check: nvim
+        arch_map:
+          amd64: x86_64
+          arm64: arm64
+        url_template: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${ARCH}.tar.gz"
+        install_script: |
+          curl -L "${URL}" -o /tmp/nvim.tar.gz
+          tar -xzf /tmp/nvim.tar.gz -C /tmp
+          mkdir -p "$HOME/.local"
+          cp -r /tmp/nvim-linux-${ARCH}/* "$HOME/.local/"
+          rm -rf /tmp/nvim.tar.gz /tmp/nvim-linux-${ARCH}
+
+      - name: vivid
+        check: vivid
+        version: "0.10.1"
+        arch_map:
+          amd64: amd64
+          arm64: arm64
+        url_template: "https://github.com/sharkdp/vivid/releases/download/v${VERSION}/vivid_${VERSION}_${ARCH}.deb"
+        install_script: |
+          curl -L "${URL}" -o /tmp/vivid.deb
+          sudo dpkg -i /tmp/vivid.deb
+          rm /tmp/vivid.deb
+
+      - name: fzf
+        check: fzf
+        version: "0.65.2"
+        arch_map:
+          amd64: amd64
+          arm64: arm64
+        url_template: "https://github.com/junegunn/fzf/releases/download/v${VERSION}/fzf-${VERSION}-linux_${ARCH}.tar.gz"
+        install_script: |
+          curl -L "${URL}" -o /tmp/fzf.tar.gz
+          tar -xzf /tmp/fzf.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/fzf "$HOME/.local/bin/fzf"
+          rm /tmp/fzf.tar.gz
