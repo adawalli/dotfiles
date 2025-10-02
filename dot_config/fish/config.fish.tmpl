@@ -1,4 +1,5 @@
 set -gx XDG_CONFIG_HOME $HOME/.config
+set -gx K9S_CONFIG_DIR $XDG_CONFIG_HOME/k9s
 
 if command -q go; fish_add_path (go env GOPATH)/bin; end
 fish_add_path $HOME/.local/bin
