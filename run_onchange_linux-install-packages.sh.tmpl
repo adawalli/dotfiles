@@ -10,8 +10,11 @@ if [[ -f /etc/debian_version ]]; then
     echo "Adding {{ .name }} apt repository..."
     {{ if hasKey . "setup_script" -}}
     {{ .setup_script | trim | indent 4 }}
-    {{ else -}}
+    {{ else if and (hasKey . "repo") (hasKey . "file") -}}
     echo {{ .repo | squote }} | sudo tee {{ .file }}
+    {{ else -}}
+    echo "Error: Repository {{ .name }} must have either setup_script or both repo and file"
+    exit 1
     {{ end -}}
   fi
   {{ end }}
@@ -47,11 +50,11 @@ if [[ -f /etc/debian_version ]]; then
   {{ range .packages.linux.binaries -}}
   if ! command -v {{ .check }} >/dev/null 2>&1; then
     echo "Installing {{ .name }}..."
-    {{ if .url_template -}}
-    {{ if .version -}}
+    {{ if hasKey . "url_template" -}}
+    {{ if hasKey . "version" -}}
     VERSION={{ .version | quote }}
     {{ end -}}
-    {{ if .arch_map -}}
+    {{ if hasKey . "arch_map" -}}
     {{ if eq $.chezmoi.arch "amd64" -}}
     ARCH={{ index .arch_map "amd64" | quote }}
     {{ else if eq $.chezmoi.arch "arm64" -}}
@@ -65,7 +68,12 @@ if [[ -f /etc/debian_version ]]; then
     URL="${URL//\$\{VERSION\}/${VERSION}}"
     URL="${URL//\$\{ARCH\}/${ARCH}}"
     {{ end -}}
+    {{ if hasKey . "install_script" -}}
     {{ .install_script | trim | indent 4 }}
+    {{ else -}}
+    echo "Error: No install_script defined for {{ .name }}"
+    exit 1
+    {{ end -}}
   else
     echo "{{ .name }} already installed"
   fi
