@@ -37,6 +37,12 @@ keybinds clear-defaults=true {
         // Essential global commands
         bind "Ctrl g" { SwitchToMode "Locked"; }  // Lock before using vim/nvim/fzf
         bind "Ctrl q" { Quit; }                    // Quit Zellij
+
+        // Direct pane navigation - no mode needed
+        bind "Alt h" { MoveFocus "Left"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt k" { MoveFocus "Up"; }
+        bind "Alt l" { MoveFocus "Right"; }
     }
 
     // ========================================================================
@@ -78,11 +84,11 @@ keybinds clear-defaults=true {
         bind "Esc" "Enter" "Ctrl Space" { SwitchToMode "Normal"; }
         bind "Ctrl c" { SwitchToMode "Normal"; }
 
-        // Pane navigation (vim-style + arrow keys)
-        bind "h" "Left" { MoveFocus "Left"; }
-        bind "j" "Down" { MoveFocus "Down"; }
-        bind "k" "Up" { MoveFocus "Up"; }
-        bind "l" "Right" { MoveFocus "Right"; }
+        // Pane navigation (vim-style + arrow keys) - auto-return to normal mode
+        bind "h" "Left" { MoveFocus "Left"; SwitchToMode "Normal"; }
+        bind "j" "Down" { MoveFocus "Down"; SwitchToMode "Normal"; }
+        bind "k" "Up" { MoveFocus "Up"; SwitchToMode "Normal"; }
+        bind "l" "Right" { MoveFocus "Right"; SwitchToMode "Normal"; }
 
         // Pane creation
         bind "n" { NewPane; SwitchToMode "Normal"; }
