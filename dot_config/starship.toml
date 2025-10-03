@@ -12,6 +12,9 @@ symbol = " "
 [c]
 symbol = " "
 
+[cpp]
+symbol = " "
+
 [cmake]
 symbol = " "
 
