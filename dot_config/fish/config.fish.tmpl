@@ -31,5 +31,5 @@ if status is-interactive
     set -gx VISUAL "cursor --wait"
     if command -q pyenv; source (pyenv init - | psub); end
     if command -q zoxide; zoxide init fish | source; end
-    if command -q vivid; set -gx LS_COLORS "$(vivid generate catppuccin-mocha)"; end
+    if command -q vivid; set -gx LS_COLORS (vivid generate catppuccin-mocha); end
 end
