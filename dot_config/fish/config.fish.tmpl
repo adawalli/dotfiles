@@ -11,6 +11,9 @@ set -gx AWS_PAGER ""
 set -U fish_greeting ""
 
 if status is-interactive
+    # Enable vim key bindings
+    fish_vi_key_bindings
+
     {{- if eq .chezmoi.os "darwin" }}
     # Homebrew should come first for precedence
     /opt/homebrew/bin/brew shellenv | source
