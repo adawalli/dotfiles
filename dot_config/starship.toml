@@ -54,7 +54,7 @@ symbol = " "
 symbol = " "
 
 [directory]
-read_only = " 󰌾"
+read_only = "󰌾"
 
 [docker_context]
 symbol = " "
@@ -78,7 +78,7 @@ symbol = "  "
 symbol = " "
 
 [git_commit]
-tag_symbol = '  '
+tag_symbol = ' '
 
 [golang]
 symbol = " "
@@ -215,6 +215,9 @@ symbol = " "
 
 [swift]
 symbol = " "
+
+[terraform]
+disabled = true
 
 [zig]
 symbol = " "
