@@ -84,6 +84,13 @@ symbol = " "
 [kotlin]
 symbol = " "
 
+[kubernetes]
+disabled = false
+symbol = "☸ "
+format = '[$symbol$context( \($namespace\))]($style) '
+style = "sapphire bold"  # Uses your catppuccin_mocha sapphire color
+
+
 [lua]
 symbol = " "
 
