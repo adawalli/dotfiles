@@ -1,5 +1,28 @@
 palette = "catppuccin_mocha"
 
+# move kubernetes after CSP
+format = """
+$all\
+$kubernetes\
+$nats\
+$direnv\
+$env_var\
+$mise\
+$crystal\
+$custom\
+$sudo\
+$cmd_duration\
+$line_break\
+$jobs\
+$battery\
+$time\
+$status\
+$os\
+$container\
+$netns\
+$shell\
+$character"""
+
 [aws]
 symbol = "  "
 
