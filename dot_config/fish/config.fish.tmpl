@@ -25,7 +25,8 @@ if status is-interactive
     fish_add_path $HOME/.atuin/bin
     {{- end }}
     source (starship init fish --print-full-init | psub)
-    set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
+    #zsh was removed from carapace bridges because of bug https://github.com/carapace-sh/carapace-bin/issues/2998
+    set -Ux CARAPACE_BRIDGES 'fish,bash,inshellisense' # optional
     if command -q carapace; carapace _carapace | source; end
     set -Ux CARAPACE_EXCLUDES kubectl # I was having issues with kubectl through carapace
     if command -v atuin >/dev/null 2>&1
