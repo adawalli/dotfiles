@@ -8,6 +8,12 @@
 - Use tree command where appropriate
 - ALWAYS use the gh cli instead of web fetches for GitHub operations
 
+## Shell Environment
+
+- User uses Fish shell
+- `.env` files use format `SECRET=XXXXX` (not `export SECRET=XXXXX`)
+- When sourcing `.env` files, use: `set -a && source .env && set +a`
+
 ## Tool Usage & Performance
 
 - Use specialized agents: test-engineer for TDD/test reviews, code-reviewer after significant changes
