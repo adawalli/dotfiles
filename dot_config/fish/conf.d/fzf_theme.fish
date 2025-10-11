@@ -18,3 +18,6 @@ set -Ux FZF_DEFAULT_OPTS "\
 
 # Disable fzf.fish Ctrl+R binding to preserve Atuin's history search
 fzf_configure_bindings --history=
+
+# Use eza for directory previews
+set fzf_preview_dir_cmd eza --all --color=always
