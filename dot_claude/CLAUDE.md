@@ -42,6 +42,15 @@
 - Verify tests fail before implementing (confirm Red phase)
 - Run full test suite before considering work complete
 
+## Writing Style
+
+- Avoid LLM telltale signs in all written content (code comments, documentation, commit messages)
+- Never use em dashes (—) - use hyphens (-) or restructure sentences instead
+- Write naturally and conversationally, not formally or academically
+- Avoid flowery or overly descriptive language
+- Be concise and direct - no unnecessary verbosity
+- Use active voice and simple sentence structures
+
 ## General Guidelines
 
 - Follow existing codebase patterns and conventions
