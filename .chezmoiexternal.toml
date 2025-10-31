@@ -1,0 +1,5 @@
+# For personal slash commands
+[".claude/commands"]
+    type = "git-repo"
+    url = "git@github.com:adawalli/claude-slash-commands.git"
+    refreshPeriod = "24h"
