@@ -21,6 +21,7 @@ packages:
       - eza
     casks:
       - ghostty
+      - claude-code
 
   linux:
     apt:

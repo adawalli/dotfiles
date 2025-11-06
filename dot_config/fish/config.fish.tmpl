@@ -7,7 +7,9 @@ if test -d $HOME/bin; fish_add_path $HOME/bin; end
 
 set -gx EDITOR nvim
 set -gx AWS_PAGER ""
-
+{{- if eq .chezmoi.os "darwin" }}
+set -gx DISABLE_AUTOUPDATER 1  # Disable Claude Code autoupdates (managed via Homebrew)
+{{- end }}
 set -U fish_greeting ""
 
 if status is-interactive
