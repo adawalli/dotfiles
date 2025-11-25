@@ -1,21 +1,9 @@
 {{- if eq .chezmoi.os "darwin" }}
-# Use eza with color support on macOS
 function ls --description 'eza with colors'
-    if command -q eza
-        eza --color=auto $argv
-    else if command -q gls
-        gls --color=auto $argv
-    else
-        command ls $argv
-    end
+    eza --color=auto $argv
 end
 {{- else }}
-# Use eza with color support on Linux
 function ls --description 'eza with colors'
-    if command -q eza
-        eza --color=auto $argv
-    else
-        command ls --color=auto $argv
-    end
+    eza --color=auto $argv
 end
 {{- end }}

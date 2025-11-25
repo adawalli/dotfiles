@@ -1,15 +1,7 @@
 function cat --wraps bat --description 'Use bat instead of cat'
     {{- if eq .chezmoi.os "linux" }}
-    if command -q batcat
-        command batcat --paging=never $argv
-    else
-        command cat $argv
-    end
+    command batcat --paging=never $argv
     {{- else }}
-    if command -q bat
-        command bat --paging=never $argv
-    else
-        command cat $argv
-    end
+    command bat --paging=never $argv
     {{- end }}
 end
