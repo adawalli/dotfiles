@@ -1,0 +1,30 @@
+# Clear inherited (global) VAULT_ADDR so universal variable takes precedence
+# (fixes VS Code/Cursor terminals inheriting stale values from parent process)
+set -eg VAULT_ADDR 2>/dev/null
+
+{{ if and .sensitive.VAULT_ADDR_STG .sensitive.VAULT_ADDR_PROD -}}
+# Stage vault login
+function vls
+    __vault_login "{{ .sensitive.VAULT_ADDR_STG }}" stage stg $argv
+end
+
+# Production vault login
+function vlp
+    __vault_login "{{ .sensitive.VAULT_ADDR_PROD }}" prod prd $argv
+end
+{{ else -}}
+# Vault URLs not configured - show helpful error
+function vls
+    echo "Error: VAULT_ADDR_STG not configured in chezmoi"
+    echo "Add to ~/.config/chezmoi/chezmoi.toml under [data.sensitive]:"
+    echo '  VAULT_ADDR_STG = "https://your-staging-vault.example.com"'
+    return 1
+end
+
+function vlp
+    echo "Error: VAULT_ADDR_PROD not configured in chezmoi"
+    echo "Add to ~/.config/chezmoi/chezmoi.toml under [data.sensitive]:"
+    echo '  VAULT_ADDR_PROD = "https://your-prod-vault.example.com"'
+    return 1
+end
+{{ end -}}
