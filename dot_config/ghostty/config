@@ -54,3 +54,5 @@ keybind = alt+arrow_down=unbind
 keybind = shift+enter=text:\n
 keybind = cmd+up=jump_to_prompt:-1
 keybind = cmd+down=jump_to_prompt:1
+
+shell-integration-features = ssh-terminfo,ssh-env
