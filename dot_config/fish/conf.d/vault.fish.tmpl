@@ -2,15 +2,15 @@
 # (fixes VS Code/Cursor terminals inheriting stale values from parent process)
 set -eg VAULT_ADDR 2>/dev/null
 
-{{ if and .sensitive.VAULT_ADDR_STG .sensitive.VAULT_ADDR_PROD -}}
+{{ if and (dig "sensitive" "VAULT_ADDR_STG" "" .) (dig "sensitive" "VAULT_ADDR_PROD" "" .) -}}
 # Stage vault login
 function vls
-    __vault_login "{{ .sensitive.VAULT_ADDR_STG }}" stage stg $argv
+    __vault_login "{{ dig "sensitive" "VAULT_ADDR_STG" "" . }}" stage stg $argv
 end
 
 # Production vault login
 function vlp
-    __vault_login "{{ .sensitive.VAULT_ADDR_PROD }}" prod prd $argv
+    __vault_login "{{ dig "sensitive" "VAULT_ADDR_PROD" "" . }}" prod prd $argv
 end
 {{ else -}}
 # Vault URLs not configured - show helpful error
