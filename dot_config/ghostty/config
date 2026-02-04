@@ -67,6 +67,9 @@ focus-follows-mouse = true
 # Visual distinction for inactive splits
 unfocused-split-opacity = 0.75
 
+# Split divider color (Catppuccin Mocha Mauve)
+split-divider-color = #cba6f7
+
 # Quick terminal dropdown
 keybind = ctrl+grave_accent=toggle_quick_terminal
 
