@@ -56,3 +56,22 @@ keybind = cmd+up=jump_to_prompt:-1
 keybind = cmd+down=jump_to_prompt:1
 
 shell-integration-features = ssh-terminfo,ssh-env
+
+# ============================================
+# Split/Multiplexer Settings (replacing zellij)
+# ============================================
+
+# Auto-focus split on mouse hover
+focus-follows-mouse = true
+
+# Visual distinction for inactive splits
+unfocused-split-opacity = 0.75
+
+# Quick terminal dropdown
+keybind = ctrl+grave_accent=toggle_quick_terminal
+
+# Vim-style split navigation (in addition to arrows)
+keybind = super+alt+h=goto_split:left
+keybind = super+alt+j=goto_split:down
+keybind = super+alt+k=goto_split:up
+keybind = super+alt+l=goto_split:right
