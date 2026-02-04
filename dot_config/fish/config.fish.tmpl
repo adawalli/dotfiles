@@ -6,9 +6,6 @@ command -q go; and fish_add_path (go env GOPATH)/bin
 
 set -gx EDITOR nvim
 set -gx AWS_PAGER ""
-{{- if eq .chezmoi.os "darwin" }}
-set -gx DISABLE_AUTOUPDATER 1
-{{- end }}
 set -q fish_greeting; or set -U fish_greeting ""
 
 if status is-interactive

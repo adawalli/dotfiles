@@ -5,5 +5,13 @@
 	email = {{ get . "email" | default "adam@byte.fit" | quote }}
 [core]
 	editor = nvim
+	pager = delta
 [init]
 	defaultBranch = main
+[interactive]
+	diffFilter = delta --color-only
+[include]
+	path = ~/.config/delta/catppuccin.gitconfig
+[delta]
+	navigate = true
+	features = catppuccin-mocha

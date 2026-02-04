@@ -3,7 +3,6 @@ packages:
     brews:
       - coreutils
       - fish
-      - zellij
       - starship
       - atuin
       - carapace
@@ -19,6 +18,12 @@ packages:
       - tree
       - k9s
       - eza
+      - yazi
+      - lazygit
+      - git-delta
+      - bottom
+      - jless
+      - mdcat
     casks:
       - ghostty
       - claude-code
@@ -64,20 +69,6 @@ packages:
         check: zoxide
         install_script: curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 
-      - name: zellij
-        check: zellij
-        version: "0.43.1"
-        arch_map:
-          amd64: x86_64
-          arm64: aarch64
-        url_template: "https://github.com/zellij-org/zellij/releases/download/v${VERSION}/zellij-${ARCH}-unknown-linux-musl.tar.gz"
-        install_script: |
-          curl -L "${URL}" -o /tmp/zellij.tar.gz
-          tar -xzf /tmp/zellij.tar.gz -C /tmp
-          mkdir -p "$HOME/.local/bin"
-          mv /tmp/zellij "$HOME/.local/bin/zellij"
-          rm /tmp/zellij.tar.gz
-
       - name: neovim
         check: nvim
         arch_map:
@@ -116,3 +107,88 @@ packages:
           mkdir -p "$HOME/.local/bin"
           mv /tmp/fzf "$HOME/.local/bin/fzf"
           rm /tmp/fzf.tar.gz
+
+      - name: yazi
+        check: yazi
+        version: "0.4.2"
+        arch_map:
+          amd64: x86_64
+          arm64: aarch64
+        url_template: "https://github.com/sxyazi/yazi/releases/download/v${VERSION}/yazi-${ARCH}-unknown-linux-gnu.zip"
+        install_script: |
+          curl -L "${URL}" -o /tmp/yazi.zip
+          unzip -o /tmp/yazi.zip -d /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/yazi-${ARCH}-unknown-linux-gnu/yazi "$HOME/.local/bin/yazi"
+          mv /tmp/yazi-${ARCH}-unknown-linux-gnu/ya "$HOME/.local/bin/ya"
+          rm -rf /tmp/yazi.zip /tmp/yazi-${ARCH}-unknown-linux-gnu
+
+      - name: lazygit
+        check: lazygit
+        version: "0.44.1"
+        arch_map:
+          amd64: x86_64
+          arm64: arm64
+        url_template: "https://github.com/jesseduffield/lazygit/releases/download/v${VERSION}/lazygit_${VERSION}_Linux_${ARCH}.tar.gz"
+        install_script: |
+          curl -L "${URL}" -o /tmp/lazygit.tar.gz
+          tar -xzf /tmp/lazygit.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/lazygit "$HOME/.local/bin/lazygit"
+          rm /tmp/lazygit.tar.gz
+
+      - name: delta
+        check: delta
+        version: "0.18.2"
+        arch_map:
+          amd64: x86_64
+          arm64: aarch64
+        url_template: "https://github.com/dandavison/delta/releases/download/${VERSION}/delta-${VERSION}-${ARCH}-unknown-linux-gnu.tar.gz"
+        install_script: |
+          curl -L "${URL}" -o /tmp/delta.tar.gz
+          tar -xzf /tmp/delta.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/delta-${VERSION}-${ARCH}-unknown-linux-gnu/delta "$HOME/.local/bin/delta"
+          rm -rf /tmp/delta.tar.gz /tmp/delta-${VERSION}-${ARCH}-unknown-linux-gnu
+
+      - name: bottom
+        check: btm
+        version: "0.10.2"
+        arch_map:
+          amd64: x86_64
+          arm64: aarch64
+        url_template: "https://github.com/ClementTsang/bottom/releases/download/${VERSION}/bottom_${ARCH}-unknown-linux-gnu.tar.gz"
+        install_script: |
+          curl -L "${URL}" -o /tmp/bottom.tar.gz
+          tar -xzf /tmp/bottom.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/btm "$HOME/.local/bin/btm"
+          rm /tmp/bottom.tar.gz
+
+      - name: jless
+        check: jless
+        version: "0.9.0"
+        arch_map:
+          amd64: x86_64
+          arm64: aarch64
+        url_template: "https://github.com/PaulJuliusMartinez/jless/releases/download/v${VERSION}/jless-v${VERSION}-${ARCH}-unknown-linux-gnu.zip"
+        install_script: |
+          curl -L "${URL}" -o /tmp/jless.zip
+          unzip -o /tmp/jless.zip -d /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/jless "$HOME/.local/bin/jless"
+          rm /tmp/jless.zip
+
+      - name: mdcat
+        check: mdcat
+        version: "2.5.0"
+        arch_map:
+          amd64: x86_64
+          arm64: aarch64
+        url_template: "https://github.com/swsnr/mdcat/releases/download/mdcat-${VERSION}/mdcat-${VERSION}-${ARCH}-unknown-linux-musl.tar.gz"
+        install_script: |
+          curl -L "${URL}" -o /tmp/mdcat.tar.gz
+          tar -xzf /tmp/mdcat.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/mdcat-${VERSION}-${ARCH}-unknown-linux-musl/mdcat "$HOME/.local/bin/mdcat"
+          rm -rf /tmp/mdcat.tar.gz /tmp/mdcat-${VERSION}-${ARCH}-unknown-linux-musl

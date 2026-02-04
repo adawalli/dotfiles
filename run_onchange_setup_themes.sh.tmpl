@@ -1,9 +1,9 @@
 {{ template "sh_header" . }}
 
 # Content fingerprint - modify this comment to trigger rerun manually
-# themes_version: 1.2.0
+# themes_version: 1.3.0
 
-# Setup bat/batcat Catppuccin theme
+# Setup bat/batcat Catppuccin themes (all flavors for delta integration)
 {{ if eq .chezmoi.os "darwin" }}
 BAT_CMD="bat"
 {{ else }}
@@ -11,19 +11,21 @@ BAT_CMD="batcat"
 {{ end }}
 
 if command -v $BAT_CMD >/dev/null 2>&1; then
-  echo "Setting up Catppuccin theme for bat..."
+  echo "Setting up Catppuccin themes for bat/delta..."
 
-  # Create themes directory
-  mkdir -p "$(${BAT_CMD} --config-dir)/themes"
+  THEMES_DIR="$(${BAT_CMD} --config-dir)/themes"
+  mkdir -p "$THEMES_DIR"
 
-  # Download Catppuccin Mocha theme
-  curl -fsSL -o "$(${BAT_CMD} --config-dir)/themes/Catppuccin Mocha.tmTheme" \
-    "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme"
+  # Download all four Catppuccin themes (required by delta's catppuccin.gitconfig)
+  for theme in Latte Frappe Macchiato Mocha; do
+    curl -fsSL -o "${THEMES_DIR}/Catppuccin ${theme}.tmTheme" \
+      "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20${theme}.tmTheme"
+  done
 
-  # Rebuild bat cache
+  # Rebuild bat cache (required for delta to find themes)
   ${BAT_CMD} cache --build
 
-  echo "✓ Bat theme installed"
+  echo "✓ Catppuccin themes installed for bat/delta"
 else
   echo "bat/batcat not found, skipping theme setup"
 fi
