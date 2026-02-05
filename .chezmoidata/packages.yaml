@@ -26,7 +26,7 @@ packages:
       - mdcat
     casks:
       - ghostty
-      - claude-code
+
 
   linux:
     apt:
