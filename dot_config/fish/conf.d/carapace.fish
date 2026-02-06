@@ -1,5 +1,8 @@
 if status is-interactive; and command -q carapace
-    set -q CARAPACE_BRIDGES; or set -Ux CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
-    set -q CARAPACE_EXCLUDES; or set -Ux CARAPACE_EXCLUDES kubectl,cat,ls,bun
+    # clean up stale universal vars from previous config
+    set -q -U CARAPACE_BRIDGES; and set -e -U CARAPACE_BRIDGES
+    set -q -U CARAPACE_EXCLUDES; and set -e -U CARAPACE_EXCLUDES
+    set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
+    set -gx CARAPACE_EXCLUDES kubectl,cat,ls,bun
     carapace _carapace | source
 end
