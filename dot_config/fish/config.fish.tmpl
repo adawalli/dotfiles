@@ -1,7 +1,7 @@
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx K9S_CONFIG_DIR $XDG_CONFIG_HOME/k9s
 
-fish_add_path $HOME/.local/bin $HOME/bin
+fish_add_path $HOME/.bun/bin $HOME/.local/bin $HOME/bin
 command -q go; and fish_add_path (go env GOPATH)/bin
 
 set -gx EDITOR nvim
