@@ -5,4 +5,11 @@ if status is-interactive; and command -q carapace
     set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
     set -gx CARAPACE_EXCLUDES kubectl,cat,ls,bun
     carapace _carapace | source
+
+    # carapace registers --no-files completions for ALL commands, even excluded
+    # ones, which breaks fish's default file completion. Restore file completions
+    # for excluded commands by erasing carapace's registration.
+    for cmd in (string split ',' $CARAPACE_EXCLUDES)
+        complete -e -c $cmd
+    end
 end
