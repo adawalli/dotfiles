@@ -29,7 +29,7 @@ packages:
       - oven-sh/bun/bun
     casks:
       - ghostty
-
+      - zed
 
   linux:
     apt:
