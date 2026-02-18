@@ -1,0 +1,91 @@
+views:
+  v1/pods:
+    columns:
+      - NAME
+      - READY
+      - STATUS
+      - RESTARTS
+      - CPU
+      - MEM
+      - IP
+      - NODE|W
+      - AGE
+
+  v1/nodes:
+    columns:
+      - NAME
+      - STATUS
+      - ROLES
+      - VERSION
+      - CPU
+      - MEM
+      - AGE
+
+  apps/v1/deployments:
+    columns:
+      - NAME
+      - NAMESPACE
+      - READY
+      - UP-TO-DATE
+      - AVAILABLE
+      - AGE
+
+  apps/v1/replicasets:
+    columns:
+      - NAME
+      - NAMESPACE
+      - DESIRED
+      - CURRENT
+      - READY
+      - AGE
+
+  apps/v1/daemonsets:
+    columns:
+      - NAME
+      - NAMESPACE
+      - DESIRED
+      - CURRENT
+      - READY
+      - UP-TO-DATE
+      - AVAILABLE
+      - AGE
+
+  apps/v1/statefulsets:
+    columns:
+      - NAME
+      - NAMESPACE
+      - READY
+      - AGE
+
+  v1/services:
+    columns:
+      - NAME
+      - TYPE
+      - CLUSTER-IP
+      - EXTERNAL-IP
+      - PORT(S)
+      - AGE
+
+  v1/namespaces:
+    columns:
+      - NAME
+      - STATUS
+      - AGE
+
+  batch/v1/jobs:
+    columns:
+      - NAME
+      - NAMESPACE
+      - COMPLETIONS
+      - DURATION
+      - AGE
+
+  batch/v1/cronjobs:
+    columns:
+      - NAME
+      - NAMESPACE
+      - SCHEDULE
+      - SUSPEND
+      - ACTIVE
+      - LAST SCHEDULE
+      - AGE
