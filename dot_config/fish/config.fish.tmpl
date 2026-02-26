@@ -12,6 +12,7 @@ if status is-interactive
     fish_vi_key_bindings
     {{- if eq .chezmoi.os "darwin" }}
     /opt/homebrew/bin/brew shellenv fish | source
+    fish_add_path /Applications/Obsidian.app/Contents/MacOS
     abbr -a icd 'cd ~/Library/Mobile\ Documents/com\~apple\~CloudDocs'
     abbr --add typora open -a typora
     {{- end }}
