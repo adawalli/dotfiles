@@ -1,0 +1,91 @@
+intake:
+  source_dir: ~/Downloads/
+  include_glob: "**/*.{vtt,meeting.json}"
+  exclude_glob: []
+  delete_source: true
+
+watch:
+  root_dir: "{{ .cassette.watch_root }}"
+  stable_window_ms: 3000
+  include_glob: "**/*.{json,vtt}"
+  exclude_glob:
+    - "**/_failed/**"
+
+output:
+  markdown_suffix: ".md"
+  overwrite: false
+  copy_to: "{{ .cassette.output_copy_to }}"
+
+failure:
+  move_failed: true
+  failed_dir_name: "_failed"
+  write_error_log: true
+
+llm:
+  base_url: "{{ .cassette.llm_base_url }}"
+  model: "{{ .cassette.llm_model }}"
+  temperature: 0.1
+  max_tokens: 12000
+  timeout_ms: 120000
+  retries: 3
+
+transcript:
+  path: "$[*]"
+  speaker_field: "speaker"
+  text_field: "text"
+
+steps:
+  - name: clean
+    suffix: ".cleaned.md"
+    notify: false
+    prompt: |
+      You are a meeting transcript editor. Clean up this raw transcript:
+      1. Fix obvious transcription errors and filler words (um, uh, like, you know)
+      2. Merge fragmented sentences into complete thoughts
+      3. Preserve speaker labels and the chronological order
+      4. Add a YAML front matter block with: date, participants, meeting type, and a 2-3 sentence summary
+      5. Keep the full cleaned transcript below these sections
+      6. Output as Markdown
+
+      Do NOT invent information. Only include what is in the transcript.
+{{- if hasKey .cassette "clean_extra" }}
+{{ .cassette.clean_extra | indent 6 }}
+{{- end }}
+
+  - name: summarize
+    suffix: ".summary.md"
+    notify: true
+    prompt: |
+      Summarize this transcript. Remove pleasantries. Structure in markdown as described below.
+
+      First, output a YAML front matter block with exactly these fields (do NOT wrap it in a code fence):
+      ---
+      categories:
+        - "[[Meetings]]"
+      tags: [meeting, cassette]
+      date: YYYY-MM-DD  (infer from the transcript; use today if unknown)
+      people:
+        - "[[Full Name]]"  (quoted wiki-link string with full first and last name, one entry per speaker)
+      project:  (leave blank)
+      summary: one or two sentence overview of the meeting <note>Do not use Obsidian style anchores in the summary</note>
+      source: "[[Cassette]]"
+      ---
+
+      Then provide a disclaimer in italics that this summary is generated using AI and could contain errors.
+      Then these sections. You can omit any section that does not have meaningful content:
+      # Key Points
+      # Detailed Summary of the Meeting
+      # Remaining Questions (only if any exist)
+        - This section should list open questions that were not adequately answered in the meeting
+      # Action Items
+        - Use "- [ ] [[Owner]]: task (deadline)" checkbox format, where Owner is the person's full name matching their attendee wikilink
+{{- if hasKey .cassette "summarize_extra" }}
+
+{{ .cassette.summarize_extra | indent 6 }}
+{{- end }}
+{{- if hasKey .cassette "on_complete_command" }}
+
+on_complete:
+  command: '{{ .cassette.on_complete_command }}'
+  timeout_ms: 10000
+{{- end }}
