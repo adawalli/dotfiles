@@ -56,6 +56,7 @@ keybind = cmd+up=jump_to_prompt:-1
 keybind = cmd+down=jump_to_prompt:1
 
 shell-integration-features = ssh-terminfo,ssh-env
+desktop-notifications = true
 
 # ============================================
 # Split/Multiplexer Settings (replacing zellij)
@@ -80,3 +81,4 @@ keybind = super+alt+k=goto_split:up
 keybind = super+alt+l=goto_split:right
 
 auto-update-channel = tip
+cursor-click-to-move = true
