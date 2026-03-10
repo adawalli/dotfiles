@@ -91,6 +91,3 @@ split-preserve-zoom = navigation
 
 # Auto-scroll to bottom when new output appears
 scroll-to-bottom = output
-
-# Show URL previews on hover before clicking (added 1.2.0)
-link-previews = true
