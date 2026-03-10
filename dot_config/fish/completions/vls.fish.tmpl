@@ -1,0 +1,13 @@
+{{ if and (dig "sensitive" "VAULT_NAMESPACE" "" .) (dig "sensitive" "VAULT_NS_ALT" "" .) -}}
+# Namespace completions for vault login functions
+set -l __vault_namespaces "{{ dig "sensitive" "VAULT_NAMESPACE" "" . }}" "{{ dig "sensitive" "VAULT_NS_ALT" "" . }}" charon tc prodsec pd
+
+complete -f -c vls -a "$__vault_namespaces" -d "Namespace"
+complete -f -c vls -l force -s f -d "Force OIDC login"
+
+complete -f -c vlp -a "$__vault_namespaces" -d "Namespace"
+complete -f -c vlp -l force -s f -d "Force OIDC login"
+
+complete -f -c vlsc -l force -s f -d "Force OIDC login"
+complete -f -c vlpc -l force -s f -d "Force OIDC login"
+{{ end -}}

@@ -1,16 +1,47 @@
-# Clear inherited (global) VAULT_ADDR so universal variable takes precedence
+# Clear inherited (global) VAULT_ADDR/VAULT_NAMESPACE so universal variables take precedence
 # (fixes VS Code/Cursor terminals inheriting stale values from parent process)
 set -eg VAULT_ADDR 2>/dev/null
+set -eg VAULT_NAMESPACE 2>/dev/null
 
 {{ if and (dig "sensitive" "VAULT_ADDR_STG" "" .) (dig "sensitive" "VAULT_ADDR_PROD" "" .) -}}
-# Stage vault login
-function vls
-    __vault_login "{{ dig "sensitive" "VAULT_ADDR_STG" "" . }}" stage stg $argv
+# Resolve namespace aliases to full names
+function __vault_resolve_ns
+    set -l input $argv[1]
+    if test -z "$input"
+        echo "{{ dig "sensitive" "VAULT_NAMESPACE" "" . }}"
+        return
+    end
+    switch $input
+        case charon tc
+            echo "{{ dig "sensitive" "VAULT_NS_ALT" "" . }}"
+        case prodsec pd
+            echo "{{ dig "sensitive" "VAULT_NAMESPACE" "" . }}"
+        case '*'
+            echo $input
+    end
 end
 
-# Production vault login
+# Stage vault login (namespace first, then flags: vls charon -f)
+function vls
+    set -l ns (__vault_resolve_ns $argv[1])
+    set -l remaining $argv[2..]
+    __vault_login "{{ dig "sensitive" "VAULT_ADDR_STG" "" . }}" stage stg $ns $remaining
+end
+
+# Production vault login (namespace first, then flags: vlp charon -f)
 function vlp
-    __vault_login "{{ dig "sensitive" "VAULT_ADDR_PROD" "" . }}" prod prd $argv
+    set -l ns (__vault_resolve_ns $argv[1])
+    set -l remaining $argv[2..]
+    __vault_login "{{ dig "sensitive" "VAULT_ADDR_PROD" "" . }}" prod prd $ns $remaining
+end
+
+# Shortcuts for alt namespace
+function vlsc
+    __vault_login "{{ dig "sensitive" "VAULT_ADDR_STG" "" . }}" stage stg "{{ dig "sensitive" "VAULT_NS_ALT" "" . }}" $argv
+end
+
+function vlpc
+    __vault_login "{{ dig "sensitive" "VAULT_ADDR_PROD" "" . }}" prod prd "{{ dig "sensitive" "VAULT_NS_ALT" "" . }}" $argv
 end
 {{ else -}}
 # Vault URLs not configured - show helpful error
