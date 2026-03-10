@@ -56,7 +56,6 @@ keybind = cmd+up=jump_to_prompt:-1
 keybind = cmd+down=jump_to_prompt:1
 
 shell-integration-features = ssh-terminfo,ssh-env
-desktop-notifications = true
 
 # ============================================
 # Split/Multiplexer Settings (replacing zellij)
@@ -80,5 +79,18 @@ keybind = super+alt+j=goto_split:down
 keybind = super+alt+k=goto_split:up
 keybind = super+alt+l=goto_split:right
 
-auto-update-channel = tip
-cursor-click-to-move = true
+# ============================================
+# Quality of Life (added 1.3.0)
+# ============================================
+
+# Notify when commands finish while terminal is unfocused (after 5s default)
+notify-on-command-finish = unfocused
+
+# Keep zoom state when navigating between splits
+split-preserve-zoom = navigation
+
+# Auto-scroll to bottom when new output appears
+scroll-to-bottom = output
+
+# Show URL previews on hover before clicking (added 1.2.0)
+link-previews = true
