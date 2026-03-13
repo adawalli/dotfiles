@@ -23,7 +23,13 @@ input=$(cat)
 
 # Extract values using jq
 MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name')
+# Shorten path: ~ for $HOME, keep last 3 components (like PROMPT_DIRTRIM)
 CURRENT_DIR=$(echo "$input" | jq -r '.cwd')
+CURRENT_DIR="${CURRENT_DIR/#$HOME/\~}"
+IFS='/' read -ra PARTS <<< "$CURRENT_DIR"
+if [[ ${#PARTS[@]} -gt 4 ]]; then
+    CURRENT_DIR=".../${PARTS[-3]}/${PARTS[-2]}/${PARTS[-1]}"
+fi
 COST=$(echo "$input" | jq -r '.cost.total_cost_usd')
 
 # Extract context window info using current_usage (actual context state)
