@@ -6,7 +6,7 @@ intake:
 
 watch:
   root_dir: "{{ .cassette.watch_root }}"
-  stable_window_ms: 3000
+  stable_window_ms: 15000
   include_glob: "**/*.{json,vtt}"
   exclude_glob:
     - "**/_failed/**"
