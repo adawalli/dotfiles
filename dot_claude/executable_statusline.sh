@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 
 # Catppuccin Mocha color definitions
-# Model colors
-REGULAR_COLOR='\033[1;38;2;243;139;168m'    # Red - regular models
-BOLD_1M_COLOR='\033[0;38;2;30;30;46;48;2;249;226;175m'  # Dark on yellow bg - 1M models
+# Model color
+MODEL_COLOR='\033[1;38;2;243;139;168m'    # Red
 # UI element colors
 DIR_COLOR='\033[0;38;2;137;180;250m'        # Blue - directory
 COST_COLOR='\033[0;38;2;203;166;247m'       # Mauve - cost
 WORKTREE_COLOR='\033[0;38;2;148;226;213m'  # Teal - worktree indicator
 BRANCH_COLOR='\033[0;38;2;166;227;161m'   # Green - git branch
 # Context usage gradient (Catppuccin Mocha)
-CTX_GREEN='\033[0;38;2;166;227;161m'        # Green - low usage (0-50%)
-CTX_YELLOW='\033[0;38;2;249;226;175m'       # Yellow - moderate (50-75%)
-CTX_PEACH='\033[0;38;2;250;179;135m'        # Peach - high (75-90%)
-CTX_RED='\033[1;38;2;243;139;168m'          # Red bold - critical (90%+)
+CTX_GREEN='\033[0;38;2;166;227;161m'        # Green - low usage (0-70%)
+CTX_YELLOW='\033[0;38;2;249;226;175m'       # Yellow - moderate (70-85%)
+CTX_PEACH='\033[0;38;2;250;179;135m'        # Peach - high (85-95%)
+CTX_RED='\033[1;38;2;243;139;168m'          # Red bold - critical (95%+)
 RESET='\033[0m'
 PIPE="${RESET} | "
 CTX_SUBTLE='\033[0;38;2;147;153;178m'  # Overlay1 - muted text for token counts
@@ -22,7 +21,7 @@ CTX_SUBTLE='\033[0;38;2;147;153;178m'  # Overlay1 - muted text for token counts
 input=$(cat)
 
 # Extract values using jq
-MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name')
+MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name' | gsed 's/ *([^)]*[KkMm][^)]*)//; s/ *\[[^]]*[KkMm][^]]*\]//')
 # Shorten path: ~ for $HOME, keep last 3 components (like PROMPT_DIRTRIM)
 CURRENT_DIR=$(echo "$input" | jq -r '.cwd')
 CURRENT_DIR="${CURRENT_DIR/#$HOME/\~}"
@@ -33,15 +32,9 @@ fi
 COST=$(echo "$input" | jq -r '.cost.total_cost_usd')
 
 # Extract context window info using current_usage (actual context state)
-CTX_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
+CTX_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 1000000')
 USAGE=$(echo "$input" | jq '.context_window.current_usage')
 
-# Choose color based on whether model has "1M" in the name
-if [[ "$MODEL_DISPLAY" =~ 1M ]]; then
-    MODEL_COLOR="$BOLD_1M_COLOR"
-else
-    MODEL_COLOR="$REGULAR_COLOR"
-fi
 
 # Calculate context usage percentage from current_usage fields
 if [[ "$USAGE" != "null" ]]; then
@@ -67,11 +60,11 @@ CTX_SIZE_DISPLAY="$((CTX_SIZE / 1000))K"
 # Choose context color based on usage percentage
 CTX_PCT_INT=${CTX_PCT%.*}
 CTX_PCT_INT=${CTX_PCT_INT:-0}
-if [[ "$CTX_PCT_INT" -ge 90 ]]; then
+if [[ "$CTX_PCT_INT" -ge 95 ]]; then
     CTX_COLOR="$CTX_RED"
-elif [[ "$CTX_PCT_INT" -ge 75 ]]; then
+elif [[ "$CTX_PCT_INT" -ge 85 ]]; then
     CTX_COLOR="$CTX_PEACH"
-elif [[ "$CTX_PCT_INT" -ge 50 ]]; then
+elif [[ "$CTX_PCT_INT" -ge 70 ]]; then
     CTX_COLOR="$CTX_YELLOW"
 else
     CTX_COLOR="$CTX_GREEN"
