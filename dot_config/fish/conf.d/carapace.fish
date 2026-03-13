@@ -3,7 +3,8 @@ if status is-interactive; and command -q carapace
     set -q -U CARAPACE_BRIDGES; and set -e -U CARAPACE_BRIDGES
     set -q -U CARAPACE_EXCLUDES; and set -e -U CARAPACE_EXCLUDES
     set -gx CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense'
-    set -gx CARAPACE_EXCLUDES kubectl,cat,ls,bun
+    # git excluded due to broken branch completions in carapace 1.6.3
+    set -gx CARAPACE_EXCLUDES kubectl,cat,ls,bun,git
     carapace _carapace | source
 
     # carapace registers --no-files completions for ALL commands, even excluded
