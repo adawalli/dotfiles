@@ -22,9 +22,10 @@ input=$(cat)
 
 # Extract values using jq
 MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name' | gsed 's/ *([^)]*[KkMm][^)]*)//; s/ *\[[^]]*[KkMm][^]]*\]//')
+# Raw cwd for filesystem operations (git, etc.)
+RAW_CWD=$(echo "$input" | jq -r '.cwd')
 # Shorten path: ~ for $HOME, keep last 3 components (like PROMPT_DIRTRIM)
-CURRENT_DIR=$(echo "$input" | jq -r '.cwd')
-CURRENT_DIR="${CURRENT_DIR/#$HOME/\~}"
+CURRENT_DIR="${RAW_CWD/#$HOME/\~}"
 IFS='/' read -ra PARTS <<< "$CURRENT_DIR"
 if [[ ${#PARTS[@]} -gt 4 ]]; then
     CURRENT_DIR=".../${PARTS[-3]}/${PARTS[-2]}/${PARTS[-1]}"
@@ -77,11 +78,10 @@ FILLED=$((CTX_PCT_INT * BAR_WIDTH / 100))
 EMPTY=$((BAR_WIDTH - FILLED))
 BAR="${CTX_COLOR}$(printf '%*s' "$FILLED" '' | tr ' ' '█')${RESET}$(printf '%*s' "$EMPTY" '' | tr ' ' '░')"
 
-# Git branch (read .git/HEAD directly - no subprocess)
+# Git branch (use git command - works in both repos and worktrees)
 BRANCH_SECTION=""
-if [[ -r "${CURRENT_DIR}/.git/HEAD" ]]; then
-    read -r HEAD_REF < "${CURRENT_DIR}/.git/HEAD"
-    BRANCH="${HEAD_REF#ref: refs/heads/}"
+BRANCH=$(git -C "$RAW_CWD" branch --show-current 2>/dev/null)
+if [[ -n "$BRANCH" ]]; then
     BRANCH_SECTION="${PIPE}${BRANCH_COLOR}${BRANCH}${RESET}"
 fi
 
