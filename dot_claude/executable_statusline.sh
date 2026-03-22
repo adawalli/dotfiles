@@ -21,7 +21,7 @@ CTX_SUBTLE='\033[0;38;2;147;153;178m'  # Overlay1 - muted text for token counts
 input=$(cat)
 
 # Extract values using jq
-MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name' | gsed 's/ *([^)]*[KkMm][^)]*)//; s/ *\[[^]]*[KkMm][^]]*\]//')
+MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name' | sed 's/ *([^)]*[KkMm][^)]*)//; s/ *\[[^]]*[KkMm][^]]*\]//')
 # Raw cwd for filesystem operations (git, etc.)
 RAW_CWD=$(echo "$input" | jq -r '.cwd')
 # Shorten path: ~ for $HOME, keep last 3 components (like PROMPT_DIRTRIM)
