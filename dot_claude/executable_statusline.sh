@@ -76,7 +76,9 @@ BAR_WIDTH=10
 FILLED=$((CTX_PCT_INT * BAR_WIDTH / 100))
 [[ "$FILLED" -gt "$BAR_WIDTH" ]] && FILLED=$BAR_WIDTH
 EMPTY=$((BAR_WIDTH - FILLED))
-BAR="${CTX_COLOR}$(printf '%*s' "$FILLED" '' | tr ' ' '█')${RESET}$(printf '%*s' "$EMPTY" '' | tr ' ' '░')"
+printf -v FILLED_STR "%${FILLED}s" ""
+printf -v EMPTY_STR "%${EMPTY}s" ""
+BAR="${CTX_COLOR}${FILLED_STR// /█}${RESET}${EMPTY_STR// /░}"
 
 # Git branch (use git command - works in both repos and worktrees)
 BRANCH_SECTION=""
