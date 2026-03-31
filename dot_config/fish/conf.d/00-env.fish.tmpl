@@ -1,0 +1,6 @@
+# Environment vars needed by conf.d scripts (runs before everything else)
+set -gx XDG_CONFIG_HOME $HOME/.config
+set -gx K9S_CONFIG_DIR $XDG_CONFIG_HOME/k9s
+{{- if eq .chezmoi.os "darwin" }}
+/opt/homebrew/bin/brew shellenv fish | source
+{{- end }}
