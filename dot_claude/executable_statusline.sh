@@ -25,7 +25,7 @@ MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name' | sed 's/ *([^)]*[Kk
 # Raw cwd for filesystem operations (git, etc.)
 RAW_CWD=$(echo "$input" | jq -r '.cwd')
 # Shorten path: ~ for $HOME, keep last 3 components (like PROMPT_DIRTRIM)
-CURRENT_DIR="${RAW_CWD/#$HOME/\~}"
+CURRENT_DIR="${RAW_CWD/#$HOME/~}"
 IFS='/' read -ra PARTS <<< "$CURRENT_DIR"
 if [[ ${#PARTS[@]} -gt 4 ]]; then
     CURRENT_DIR=".../${PARTS[-3]}/${PARTS[-2]}/${PARTS[-1]}"
