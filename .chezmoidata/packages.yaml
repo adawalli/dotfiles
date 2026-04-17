@@ -27,9 +27,7 @@ packages:
       - jless
       - mdcat
       - oven-sh/bun/bun
-    casks:
-      - ghostty
-      - zed
+    casks: []
 
   linux:
     apt:
