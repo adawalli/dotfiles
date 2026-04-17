@@ -15,5 +15,5 @@ if status is-interactive
     {{- if eq .chezmoi.os "linux" }}
     fish_add_path $HOME/.atuin/bin
     {{- end }}
-    set -gx VISUAL "cursor --wait"
+    set -gx VISUAL "code --wait"
 end
