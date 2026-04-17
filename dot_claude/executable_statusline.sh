@@ -33,7 +33,7 @@ fi
 COST=$(echo "$input" | jq -r '.cost.total_cost_usd')
 
 # Extract context window info using current_usage (actual context state)
-CTX_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 1000000')
+CTX_SIZE=${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-$(echo "$input" | jq -r '.context_window.context_window_size // 1000000')}
 USAGE=$(echo "$input" | jq '.context_window.current_usage')
 
 
