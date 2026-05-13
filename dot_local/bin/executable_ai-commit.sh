@@ -6,7 +6,7 @@
 # !!! constants below - add new ones the same way and reference them with "$VAR"
 # !!! rather than the bare command name.
 #
-# ai-commit - Generate git commit messages using a local Ollama model.
+# ai-commit - Generate git commit messages using a local oMLX model.
 #
 # Usage:
 #   ai-commit              # message for current unstaged + staged changes
@@ -14,22 +14,21 @@
 #   ai-commit --debug      # print the request payload for troubleshooting
 #
 # Requirements:
-#   - ollama running on localhost:11434  (brew install ollama && brew services start ollama)
+#   - oMLX server running on 127.0.0.1:8000
 #   - jq
-#   - the chosen model pulled (ollama pull gemma4:e4b)
+#   - the chosen model available in oMLX (default: gemma-4-e2b-it-4bit)
 #
 # Recommended models:
-#   - gemma4:e4b              (default, bf16, ~9.6GB - best quality)
-#   - gemma4:e4b-it-q4_K_M    (~3GB - 4-bit quant, much smaller, near-identical quality)
-#   - gemma4:e2b              (~5GB - smaller, faster)
+#   - gemma-4-e2b-it-4bit   (default, local 4-bit quantized variant)
 
 set -euo pipefail
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-MODEL="${AI_COMMIT_MODEL:-gemma4:e4b}"
-OLLAMA_URL="${AI_COMMIT_OLLAMA_URL:-http://localhost:11434}"
+MODEL="${AI_COMMIT_MODEL:-gemma-4-e2b-it-4bit}"
+API_BASE_URL="${AI_COMMIT_API_BASE:-${AI_COMMIT_OLLAMA_URL:-http://127.0.0.1:8000/v1}}"
+API_KEY="${AI_COMMIT_API_KEY:-}"
 MAX_DIFF_CHARS="${AI_COMMIT_MAX_DIFF_CHARS:-60000}"
 MAX_TOKENS="${AI_COMMIT_MAX_TOKENS:-500}"
 
@@ -52,8 +51,8 @@ check_deps() {
   for bin in "$GIT" "$JQ" "$CURL" "$HEAD" "$TAIL" "$GSED"; do
     [ -x "$bin" ] || die "required binary not found: $bin"
   done
-  "$CURL" -fsS "${OLLAMA_URL}/api/version" >/dev/null 2>&1 \
-    || die "ollama not reachable at ${OLLAMA_URL} (try: brew services start ollama)"
+  "$CURL" -fsS "${API_BASE_URL}/models" >/dev/null 2>&1 \
+    || die "oMLX not reachable at ${API_BASE_URL}"
 }
 
 # ---------------------------------------------------------------------------
@@ -135,14 +134,14 @@ PAYLOAD=$("$JQ" -n \
       {role: "system", content: $sys},
       {role: "user",   content: $usr}
     ],
-    stream: false,
-    think: false,
-    options: {num_predict: $max, temperature: 0.2}
+    max_tokens: $max,
+    temperature: 0.2,
+    stream: false
   }')
 
 if [ "$DEBUG" = true ]; then
-  printf '\033[1;35m--- debug: ollama request ---\033[0m\n' >&2
-  printf 'url:    %s/api/chat\n' "$OLLAMA_URL" >&2
+  printf '\033[1;35m--- debug: oMLX request ---\033[0m\n' >&2
+  printf 'url:    %s/chat/completions\n' "$API_BASE_URL" >&2
   printf 'model:  %s\n' "$MODEL" >&2
   printf 'payload:\n%s\n' "$PAYLOAD" | "$JQ" . >&2
   printf '\033[1;35m-----------------------------\033[0m\n' >&2
@@ -150,11 +149,18 @@ fi
 
 info "generating commit message with ${MODEL} ..."
 
-RESPONSE=$("$CURL" -fsS "${OLLAMA_URL}/api/chat" \
-  -H 'Content-Type: application/json' \
-  -d "$PAYLOAD") || die "ollama request failed"
+if [ -n "$API_KEY" ]; then
+  RESPONSE=$("$CURL" -fsS "${API_BASE_URL}/chat/completions" \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer ${API_KEY}" \
+    -d "$PAYLOAD") || die "oMLX request failed"
+else
+  RESPONSE=$("$CURL" -fsS "${API_BASE_URL}/chat/completions" \
+    -H 'Content-Type: application/json' \
+    -d "$PAYLOAD") || die "oMLX request failed"
+fi
 
-MESSAGE=$(printf '%s' "$RESPONSE" | "$JQ" -r '.message.content // empty')
+MESSAGE=$(printf '%s' "$RESPONSE" | "$JQ" -r '.choices[0].message.content // .message.content // empty')
 
 [ -z "$MESSAGE" ] && die "model returned an empty response (raw: $RESPONSE)"
 
