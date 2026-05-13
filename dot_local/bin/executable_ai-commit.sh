@@ -106,17 +106,22 @@ FORMAT (follow exactly):
 
 RULES:
 - First word must be a verb (Add, Fix, Update, Remove, Refactor, etc.)
-- Bullet points describe WHAT changed, not WHY
-- One bullet per file or logical change
+- Bullet points describe meaningful user-facing or content changes
+- Prefer intent and substance over file mechanics
+- Group related markdown or note edits into 1-3 high-signal bullets
+- Do not mention mechanical scaffolding unless it is the actual change:
+  frontmatter fields, empty lists, added headings, added sections, file paths,
+  templates, or formatting-only setup
+- One bullet per logical change
 - No markdown, no code fences, no preamble, no sign-off
 - If the diff is trivial (< 5 lines), skip bullets entirely
 
 Example output:
-Add Niklas Luhmann details and slip-box workflow notes
+Add GitLab Agentic AI security workflow meeting notes
 
-- Fix author name formatting in preface
-- Add section on Luhmann's index card system
-- Document step-by-step process for creating permanent notes
+- Capture discussion topics around MR approval policies
+- Summarize scan and pipeline execution policy considerations
+- Add decisions, action items, and notes from the meeting
 PROMPT
 
 USER_PROMPT="<diff>
