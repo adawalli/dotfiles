@@ -1,5 +1,9 @@
 fish_add_path $HOME/.bun/bin $HOME/.local/bin $HOME/bin
 command -q go; and fish_add_path (go env GOPATH)/bin
+{{- if eq .chezmoi.os "darwin" }}
+set -gx PNPM_HOME $HOME/Library/pnpm
+fish_add_path $PNPM_HOME/bin
+{{- end }}
 
 set -gx EDITOR nvim
 set -gx AWS_PAGER ""
